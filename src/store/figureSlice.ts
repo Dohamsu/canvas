@@ -17,9 +17,13 @@ export const firgureSlice = createSlice({
     saveFigure: (state,action) => {
       state.figureList.push(action.payload);
     },
+    clearFigure: (state,action) => {
+      state.figureList=[];
+      console.log(state.figureList);
+    },
   },
 });
 
-export const { saveFigure } = firgureSlice.actions;
+export const { saveFigure, clearFigure } = firgureSlice.actions;
 export const allFigures = (state: RootState) => state.figure.figureList;
 export default firgureSlice.reducer;
