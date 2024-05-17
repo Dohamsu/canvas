@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Typography, Link } from '@mui/material';
+import Canvas from '../components/Canvas';
+import DrawMenu from '../components/DrawMenu';
 
 const Home: React.FC = () => {
+
+    const [drawOption, setDrawOption] = useState<string>('circle');
+
   return (
     <div>
-      <Typography variant="h3">Home Page</Typography>
+        <DrawMenu drawOption={drawOption} setDrawOption={setDrawOption}/>
+        <Canvas drawOption={drawOption} setDrawOption={setDrawOption}/>
     </div>
   );
 };

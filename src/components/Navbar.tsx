@@ -11,7 +11,7 @@ const Navbar: React.FC = () => {
         </Typography>
         <Button color="inherit" component={RouterLink} to="/">Home</Button>
         <Button color="inherit" component={RouterLink} to="/about">About</Button>
-        <Button color="inherit" component={RouterLink} to="/counter">Counter</Button>
+        {/* <Button color="inherit" component={RouterLink} to="/counter">Counter</Button> */}
       </Toolbar>
     </AppBar>
   );
