@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import React, { MouseEventHandler, useRef, useState } from 'react';
 import { DrawOption } from '../store/type';
+import {FIGURE_LINE_WIDTH} from '../store/CONST';
 
 const Canvas: React.FC<DrawOption>= ({drawOption}) => {
 
@@ -67,8 +68,8 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
           
 
           <svg className='svgTest' 
-          width={Math.abs(figureWith)}
-          height={Math.abs(figureHeight)}
+          width={Math.abs(figureWith) + 10}
+          height={Math.abs(figureHeight) + 10}
           style={{
             position:'absolute',
             top: figureY,
@@ -76,10 +77,17 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
 
           }}>
             {drawOption=='circle'&&(
-              <ellipse cx={figureWith/2} cy={figureHeight/2} rx={Math.abs(figureWith/2)} ry={Math.abs(figureHeight/2)} stroke="black" strokeWidth="1" fill="white" />
+              <ellipse 
+              cx={Math.abs(figureWith)/2} 
+              cy={Math.abs(figureHeight)/2} 
+              rx={Math.abs(figureWith/2)-FIGURE_LINE_WIDTH} 
+              ry={Math.abs(figureHeight/2)-FIGURE_LINE_WIDTH} 
+              stroke="black" 
+              strokeWidth= {FIGURE_LINE_WIDTH} 
+              fill="white" />
             )}
             {drawOption=='rec'&&(
-              <rect x={0} y={0} width={Math.abs(figureWith)} height={Math.abs(figureHeight)}  stroke="black" strokeWidth="3" fill="red" />
+              <rect x={0} y={0} width={Math.abs(figureWith)} height={Math.abs(figureHeight)}  stroke="black" strokeWidth={FIGURE_LINE_WIDTH} fill="red" />
             )}
           
           </svg>
