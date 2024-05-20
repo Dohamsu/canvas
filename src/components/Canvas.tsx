@@ -1,18 +1,19 @@
-import { Box, Checkbox } from '@mui/material';
-import React, { MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
+import { Box, Button, Checkbox } from '@mui/material';
+import React, { MouseEventHandler, ReactElement, useCallback, useEffect, useRef, useState } from 'react';
 import { DrawOption } from '../store/type';
 import {FIGURE_LINE_WIDTH, FIGURE_MINIMUM_SIZE} from '../store/CONST';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { saveFigure, clearFigure,  allFigures, firgureSlice } from '../store/figureSlice';
 import * as DOMPurify from 'dompurify';
+import SideBar from './SideBar';
 
 const Canvas: React.FC<DrawOption>= ({drawOption}) => {
 
   const [startXY, setStartXY]        = useState({ x : 0, y : 0});
   const [endXY, setEndXY]            = useState({ x : 0, y : 0});
   const [isDrawing, setIsDrawing]    = useState(false);
-  const [figureList, setFigureList] = useState<any>([]);
+  const [figureList, setFigureList] = useState<ReactElement[]>([]);
   const [checkedList, setCheckedList] = useState<number[]>([]);
   const [isChecked, setIsChecked] = useState(false);
   const allFigures = useSelector((state: RootState) => state.figure.figureList);
@@ -43,6 +44,7 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
     if(figureList.length<1){
       figureListRef.current = [];
     }
+    console.log(figureListRef.current[0]?.querySelector('svg'));
   },[allFigures]);
 
 
@@ -84,12 +86,20 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
   }
 
   const checkedItemHandler = (value: number, isChecked: boolean) => {
+    let targetSVG = figureListRef.current[value]?.querySelector('svg');
+    
     if (isChecked) {
       setCheckedList((prev) => [...prev, value]);
+      if(targetSVG){
+        targetSVG.style.border='dotted  blue';
+      }
       return;
     }
     if (!isChecked && checkedList.includes(value)) {
       setCheckedList(checkedList.filter((item) => item !== value));
+      if(targetSVG){
+        targetSVG.style.border='black';
+      }
       return;
     }
     return;
@@ -168,35 +178,12 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
           
           </svg>
         </Box>
-        <Box
-          sx={{
-            position:'absolute',
-            top:'105px',
-            right:'25px',
-            height:'500px',
-            width:'120px',
-            overflow:'scroll',
-            border:'1px solid black'
-          }}      
-        >
-          <div>
-            {figureList.map((figure: any,index: number)=>
-            <div 
-              key={index}
-              ref={(ref)=> 
-                figureButtonRef.current[index]= ref}
-                >
-              <Checkbox
-                checked={checkedList.includes(index)}
-                onChange={(e) => checkHandler(e, index)}
-                inputProps={{ 'aria-label': 'primary checkbox' }}
-              />
-              <label>  layer {index}</label>
-            </div>
-
-            )}
-          </div>
-        </Box>
+        <SideBar 
+          figureList={figureList}
+          figureButtonRef={figureButtonRef}
+          checkedList={checkedList} 
+          checkHandler={checkHandler}
+        />
       </Box>
     </>
   );
