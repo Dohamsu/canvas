@@ -1,10 +1,10 @@
-import { Box, Button, Checkbox } from '@mui/material';
+import { Box } from '@mui/material';
 import React, { MouseEventHandler, ReactElement, useCallback, useEffect, useRef, useState } from 'react';
 import { DrawOption } from '../store/type';
 import {FIGURE_LINE_WIDTH, FIGURE_MINIMUM_SIZE} from '../store/CONST';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store';
-import { saveFigure, clearFigure,  allFigures, firgureSlice } from '../store/figureSlice';
+import { saveFigure, initFigure } from '../store/figureSlice';
 import * as DOMPurify from 'dompurify';
 import SideBar from './SideBar';
 
@@ -45,6 +45,11 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
     console.log(figureListRef.current[0]?.querySelector('svg'));
   },[allFigures]);
 
+    //init
+    useEffect(()=> {
+      dispatch(initFigure(''));
+    },[]);
+  
 
   const testIsFigure = ()=>{
     if(Math.abs(figureHeight) < FIGURE_MINIMUM_SIZE && Math.abs(figureWith) < FIGURE_MINIMUM_SIZE){
