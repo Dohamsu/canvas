@@ -14,7 +14,7 @@ export const firgureSlice = createSlice({
   name: 'figure',
   initialState,
   reducers: {
-    initFigure: (state,action) => {
+    initFigure: (state) => {
       let savedFigures = localStorage.getItem('test');
       if(savedFigures){
         let elem = savedFigures.split('drawing');
@@ -28,6 +28,10 @@ export const firgureSlice = createSlice({
       state.figureList.push(action.payload);
       localStorage.setItem('test',(state.figureList.join('drawing')));
     },
+    eidtFigure: (state, action) => {
+      console.log(action.payload);
+      state.figureList= state.figureList.filter((v, i) => action.payload.indexOf(i)<0 );
+    },
     clearFigure: (state,action) => {
       state.figureList=[];
       localStorage.setItem('test','');
@@ -36,6 +40,6 @@ export const firgureSlice = createSlice({
   },
 });
 
-export const { initFigure, saveFigure, clearFigure } = firgureSlice.actions;
+export const { initFigure, saveFigure, eidtFigure, clearFigure } = firgureSlice.actions;
 export const allFigures = (state: RootState) => state.figure.figureList;
 export default firgureSlice.reducer;

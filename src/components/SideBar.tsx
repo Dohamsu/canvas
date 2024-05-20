@@ -1,10 +1,13 @@
 import { Box, Button, Checkbox } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 import { SideBarProps } from '../store/type';
+import { eidtFigure } from '../store/figureSlice';
+import { useDispatch } from 'react-redux';
 
 const SideBar: React.FC<SideBarProps>= ({figureList, figureButtonRef, figureListRef}) => {
     const [isChecked, setIsChecked]     = useState(false);
     const [checkedList, setCheckedList] = useState<number[]>([]);
+    const dispatch = useDispatch();
 
     const checkedItemHandler = (value: number, isChecked: boolean) => {
         let targetSVG = figureListRef.current[value]?.querySelector('svg');
@@ -31,14 +34,13 @@ const SideBar: React.FC<SideBarProps>= ({figureList, figureButtonRef, figureList
     checkedItemHandler(value, e.target.checked);
     };
 
-  const deleteSelects = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
+  const deleteSelects = ()=>{
 
-      console.log('checkedList:', checkedList);
-    },
-    [checkedList]
-  );
+    
+    dispatch(eidtFigure(checkedList));
+    setCheckedList([]);
+    console.log(checkedList);
+  }
 
 return (
     <>
@@ -54,7 +56,7 @@ return (
             }}      
         >
         <Button
-            onClick={()=>deleteSelects}
+            onClick={deleteSelects}
         >
             선택 삭제
         </Button>

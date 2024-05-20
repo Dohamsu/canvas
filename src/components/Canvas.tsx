@@ -42,15 +42,14 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
     if(figureList.length<1){
       figureListRef.current = [];
     }
-    console.log(figureListRef.current[0]?.querySelector('svg'));
   },[allFigures]);
 
-    //init
-    useEffect(()=> {
-      dispatch(initFigure(''));
-    },[]);
+  //init
+  useEffect(()=> {
+    dispatch(initFigure());
+  },[]);
   
-
+  // 도형으로 인식할 최소 조건 확인
   const testIsFigure = ()=>{
     if(Math.abs(figureHeight) < FIGURE_MINIMUM_SIZE && Math.abs(figureWith) < FIGURE_MINIMUM_SIZE){
       return false;
@@ -73,7 +72,6 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
       case 'mouseup' : 
         setIsDrawing(false);
         if(testIsFigure()){
- 
           let figure = figureRef.current as Element;
           dispatch(saveFigure(figure.outerHTML));
         }
