@@ -10,12 +10,10 @@ import SideBar from './SideBar';
 
 const Canvas: React.FC<DrawOption>= ({drawOption}) => {
 
-  const [startXY, setStartXY]        = useState({ x : 0, y : 0});
-  const [endXY, setEndXY]            = useState({ x : 0, y : 0});
-  const [isDrawing, setIsDrawing]    = useState(false);
-  const [figureList, setFigureList] = useState<ReactElement[]>([]);
-  const [checkedList, setCheckedList] = useState<number[]>([]);
-  const [isChecked, setIsChecked] = useState(false);
+  const [startXY, setStartXY]         = useState({ x : 0, y : 0});
+  const [endXY, setEndXY]             = useState({ x : 0, y : 0});
+  const [isDrawing, setIsDrawing]     = useState(false);
+  const [figureList, setFigureList]   = useState<ReactElement[]>([]);
   const allFigures = useSelector((state: RootState) => state.figure.figureList);
   const dispatch = useDispatch();
 
@@ -85,40 +83,6 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
     }
   }
 
-  const checkedItemHandler = (value: number, isChecked: boolean) => {
-    let targetSVG = figureListRef.current[value]?.querySelector('svg');
-    
-    if (isChecked) {
-      setCheckedList((prev) => [...prev, value]);
-      if(targetSVG){
-        targetSVG.style.border='dotted  blue';
-      }
-      return;
-    }
-    if (!isChecked && checkedList.includes(value)) {
-      setCheckedList(checkedList.filter((item) => item !== value));
-      if(targetSVG){
-        targetSVG.style.border='black';
-      }
-      return;
-    }
-    return;
-  };
-
-  const checkHandler = (e: React.ChangeEvent<HTMLInputElement>, value: number) => {
-    setIsChecked(!isChecked);
-    checkedItemHandler(value, e.target.checked);
-  };
-
-  const onSubmit = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-
-      console.log('checkedList:', checkedList);
-    },
-    [checkedList]
-  );
-
   return (
     <>
       <Box
@@ -180,9 +144,8 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
         </Box>
         <SideBar 
           figureList={figureList}
+          figureListRef={figureListRef}
           figureButtonRef={figureButtonRef}
-          checkedList={checkedList} 
-          checkHandler={checkHandler}
         />
       </Box>
     </>

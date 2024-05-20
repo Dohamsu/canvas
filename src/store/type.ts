@@ -8,8 +8,7 @@ export interface DrawOption  {
 
 export interface SideBarProps  {
     figureList : ReactElement[],
+    figureListRef: React.MutableRefObject<(HTMLDivElement | null)[]>;
     figureButtonRef: React.MutableRefObject<(HTMLDivElement | null)[]>;
-    checkedList: number[],
-    checkHandler: (e: React.ChangeEvent<HTMLInputElement>, value: number) => void;
 };
   

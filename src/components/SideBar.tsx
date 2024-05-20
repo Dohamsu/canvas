@@ -1,8 +1,44 @@
 import { Box, Button, Checkbox } from '@mui/material';
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { SideBarProps } from '../store/type';
 
-const SideBar: React.FC<SideBarProps>= ({figureList, figureButtonRef, checkedList, checkHandler}) => {
+const SideBar: React.FC<SideBarProps>= ({figureList, figureButtonRef, figureListRef}) => {
+    const [isChecked, setIsChecked]     = useState(false);
+    const [checkedList, setCheckedList] = useState<number[]>([]);
+
+    const checkedItemHandler = (value: number, isChecked: boolean) => {
+        let targetSVG = figureListRef.current[value]?.querySelector('svg');
+        
+        if (isChecked) {
+          setCheckedList((prev) => [...prev, value]);
+          if(targetSVG){
+            targetSVG.style.border='dotted  blue';
+          }
+          return;
+        }
+        if (!isChecked && checkedList.includes(value)) {
+          setCheckedList(checkedList.filter((item) => item !== value));
+          if(targetSVG){
+            targetSVG.style.border='black';
+          }
+          return;
+        }
+        return;
+      };
+    
+    const checkHandler = (e: React.ChangeEvent<HTMLInputElement>, value: number) => {
+    setIsChecked(!isChecked);
+    checkedItemHandler(value, e.target.checked);
+    };
+
+  const deleteSelects = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+
+      console.log('checkedList:', checkedList);
+    },
+    [checkedList]
+  );
 
 return (
     <>
@@ -17,7 +53,11 @@ return (
             border:'1px solid black'
             }}      
         >
-        <Button>일괄 삭제</Button>
+        <Button
+            onClick={()=>deleteSelects}
+        >
+            선택 삭제
+        </Button>
         <div>
             {figureList.map((figure: any,index: number)=>
                 <div 
