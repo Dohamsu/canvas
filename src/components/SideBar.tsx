@@ -1,5 +1,5 @@
 import { Box, Button, Checkbox } from '@mui/material';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { SideBarProps } from '../store/type';
 import { eidtFigure } from '../store/figureSlice';
 import { useDispatch } from 'react-redux';

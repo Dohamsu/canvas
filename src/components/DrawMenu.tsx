@@ -2,7 +2,7 @@ import { Box, Button } from '@mui/material';
 import React, { useCallback } from 'react';
 import { DrawOption } from '../store/type';
 import {DRAW_OPTION_LIST} from '../store/CONST';
-import { saveFigure, clearFigure,  allFigures, firgureSlice } from '../store/figureSlice';
+import { clearFigure } from '../store/figureSlice';
 import { useDispatch } from 'react-redux';
 
 const DrawMenu: React.FC<DrawOption> = ({ drawOption, setDrawOption }) => {
