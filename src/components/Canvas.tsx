@@ -13,11 +13,14 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
   const [startXY, setStartXY]         = useState({ x : 0, y : 0});
   const [endXY, setEndXY]             = useState({ x : 0, y : 0});
   const [isDrawing, setIsDrawing]     = useState(false);
+  const [isMoving, setIsMoving]       = useState(false);
   const [figureList, setFigureList]   = useState<ReactElement[]>([]);
+  const [movingFigure, setMovingFigure]   = useState<HTMLElement|null>();
   const allFigures = useSelector((state: RootState) => state.figure.figureList);
   const dispatch = useDispatch();
 
   const mouseRef         = useRef<HTMLDivElement>(null);
+  const movingRef        = useRef<{x:any,y:any, width:any}>({x:0,y:0,width:0});
   const figureRef        = useRef<(SVGSVGElement | null)>(null);
   const figureListRef    = useRef<(HTMLDivElement | null)[]>([]);
   const figureButtonRef  = useRef<(HTMLDivElement | null)[]>([]);
@@ -51,7 +54,7 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
   
   // 도형으로 인식할 최소 조건 확인
   const testIsFigure = ()=>{
-    if(Math.abs(figureHeight) < FIGURE_MINIMUM_SIZE && Math.abs(figureWith) < FIGURE_MINIMUM_SIZE){
+    if(Math.abs(figureHeight) < FIGURE_MINIMUM_SIZE || Math.abs(figureWith) < FIGURE_MINIMUM_SIZE){
       return false;
     }else{
       return true;
@@ -61,49 +64,92 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
   const mouseClickHandler: MouseEventHandler = (e) => {
     const x = e.pageX;
     const y = e.pageY;
-
+    
+    console.log(e.type);
     switch(e.type){
-      case 'mousedown' :   
+
+      case 'contextmenu' : 
+      e.preventDefault();
+
+       console.log('dd');
+       return null;
+      break;
+      case 'mousedown' :
+
+        let targetElem = e.target as HTMLElement;
         setStartXY({x,y});
         setEndXY({x,y});
-        setIsDrawing(true);
+        if(targetElem.tagName === 'svg'){
+          setMovingFigure(targetElem);
+          movingRef.current.x = Number(window.getComputedStyle(targetElem).left.replace('px',''));
+          movingRef.current.y = Number(window.getComputedStyle(targetElem).top.replace('px',''));
+        }else{
+          setIsDrawing(true);
+        }
       break;
 
       case 'mouseup' : 
+      if(isDrawing){
         setIsDrawing(false);
         if(testIsFigure()){
-          let figure = figureRef.current as Element;
-          dispatch(saveFigure(figure.outerHTML));
+            let figure = figureRef.current as Element;
+            dispatch(saveFigure(figure.outerHTML));
         }
-      break;
+      }else if(movingFigure){
+        let figure = movingFigure as Element;
+        console.log(movingRef.current);
+        // dispatch(saveFigure(figure.outerHTML));
+        setMovingFigure(null);
+      }
 
+      break;
       case 'mousemove' : 
         if(isDrawing){
           setEndXY({x,y});
+        }else if(movingFigure){
+          movingFigure.style.top=((movingRef.current.y + (e.clientY - startXY.y) )).toString();
+          movingFigure.style.left=((movingRef.current.x + (e.clientX - startXY.x) )).toString();
         }
       break;
+      case 'mouseleave' : 
+      setIsDrawing(false);
+      if(movingFigure){
+        movingFigure.style.top=((movingRef.current.y )).toString();
+        movingFigure.style.left=((movingRef.current.x)).toString();
+      }
+      setMovingFigure(null);   
+    break;
       default: ;
     }
   }
 
+  const mouseRightClickHandler: MouseEventHandler = (e) => {
+    e.preventDefault();
+    console.log("dd");
+    // alert('채팅방을 정말 삭제하시겠어요?')
+  }
   return (
     <>
       <Box
-        width={'100%'} 
-        height={'50vh'}
+        width={'80%'} 
+        height={'90vh'}
         textAlign='center' 
+        margin={'auto'}
       >
         <Box 
           className='svgBox'
           ref={mouseRef}
           onMouseDown={mouseClickHandler}
           onMouseMove={mouseClickHandler}
+          onContextMenu={mouseClickHandler}
+          onMouseLeave={mouseClickHandler}
           onMouseUp={mouseClickHandler}
-          width={'100%'} 
+          width={'80%'} 
           height={800} 
           border='1px solid'
           sx={{
-          cursor:'pointer'
+          cursor:'crosshair',
+          zIndex:'9999'
           }}
         >
         <>
@@ -127,6 +173,7 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
             top: figureY,
             left: figureX,
             display: isDrawing===true?  'block': 'none',
+            cursor:'move'
           }}>
             {drawOption==='circle'&&(
               <ellipse 
