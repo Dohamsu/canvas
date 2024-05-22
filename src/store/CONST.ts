@@ -1,5 +1,5 @@
 
-export const DRAW_OPTION_LIST = [{name : '사각형', value:'rec' },{name : '원', value:'circle' }, {name : '삼각형', value:'tri' }];
+export const DRAW_OPTION_LIST = [{name : '사각형', value:'rec' },{name : '원', value:'circle' }];
 
 //도형 테두리
 export const FIGURE_LINE_WIDTH = 1;
