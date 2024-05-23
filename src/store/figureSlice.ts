@@ -32,7 +32,6 @@ export const firgureSlice = createSlice({
     editFigure: (state, action) => {
       let newData = action.payload.split('class:')[0];
       let newDataClass   = action.payload.split('class:')[1];
-      console.log( action.payload);
       state.figureList.map((elem,i)=> 
         {
           let svgClass = elem.match(/class="[0-9]*["]/g);

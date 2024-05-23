@@ -4,7 +4,7 @@ import { SideBarProps } from '../store/type';
 import { deleteFigure } from '../store/figureSlice';
 import { useDispatch } from 'react-redux';
 
-const SideBar: React.FC<SideBarProps>= ({figureList, figureButtonRef, figureListRef}) => {
+const SideBar: React.FC<SideBarProps>= ({figureList, figureListRef}) => {
     const [isChecked, setIsChecked]     = useState(false);
     const [checkedList, setCheckedList] = useState<number[]>([]);
     const dispatch = useDispatch();
@@ -64,8 +64,6 @@ return (
             {figureList.map((figure: any,index: number)=>
                 <div 
                     key={index}
-                    ref={(ref)=> 
-                    figureButtonRef.current[index]= ref}
                     >
                     <Checkbox
                         checked={checkedList.includes(index)}
