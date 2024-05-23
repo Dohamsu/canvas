@@ -1,7 +1,7 @@
 import { Box, Button, Checkbox } from '@mui/material';
 import React, { useState } from 'react';
 import { SideBarProps } from '../store/type';
-import { eidtFigure } from '../store/figureSlice';
+import { deleteFigure } from '../store/figureSlice';
 import { useDispatch } from 'react-redux';
 
 const SideBar: React.FC<SideBarProps>= ({figureList, figureButtonRef, figureListRef}) => {
@@ -37,7 +37,7 @@ const SideBar: React.FC<SideBarProps>= ({figureList, figureButtonRef, figureList
   const deleteSelects = ()=>{
 
     
-    dispatch(eidtFigure(checkedList));
+    dispatch(deleteFigure(checkedList));
     setCheckedList([]);
     console.log(checkedList);
   }
@@ -49,7 +49,7 @@ return (
             position:'absolute',
             top:'105px',
             right:'25px',
-            height:'500px',
+            height:'90%',
             width:'120px',
             overflow:'scroll',
             border:'1px solid black'
@@ -60,7 +60,7 @@ return (
         >
             선택 삭제
         </Button>
-        <div>
+        <>
             {figureList.map((figure: any,index: number)=>
                 <div 
                     key={index}
@@ -68,14 +68,13 @@ return (
                     figureButtonRef.current[index]= ref}
                     >
                     <Checkbox
-                    checked={checkedList.includes(index)}
-                    onChange={(e) => checkHandler(e, index)}
-                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                        checked={checkedList.includes(index)}
+                        onChange={(e) => checkHandler(e, index)}
                     />
                     <label>  layer {index}</label>
                 </div>
             )}
-        </div>
+        </>
         </Box>
     </>
 )
