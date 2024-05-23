@@ -9,6 +9,13 @@ export interface DrawOption  {
 export interface SideBarProps  {
     figureList : ReactElement[],
     figureListRef: React.MutableRefObject<(HTMLDivElement | null)[]>;
-    figureButtonRef: React.MutableRefObject<(HTMLDivElement | null)[]>;
+};
+  
+
+export interface OptionPopupProps {
+    figure : HTMLElement,
+    open: boolean;
+    selectedValue: string;
+    onClose: (value: string) => void;
 };
   

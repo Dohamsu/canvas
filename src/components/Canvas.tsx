@@ -7,15 +7,19 @@ import { RootState } from '../store/store';
 import { saveFigure, editFigure, initFigure } from '../store/figureSlice';
 import * as DOMPurify from 'dompurify';
 import SideBar from './SideBar';
+import OptionPopup from './OptionPopup';
 
 const Canvas: React.FC<DrawOption>= ({drawOption}) => {
 
-  const [startXY, setStartXY]         = useState({ x : 0, y : 0});
-  const [endXY, setEndXY]             = useState({ x : 0, y : 0});
-  const [isDrawing, setIsDrawing]     = useState(false);
-  const [isMoving, setIsMoving]       = useState(false);
-  const [figureList, setFigureList]   = useState<ReactElement[]>([]);
+  const [startXY, setStartXY]             = useState({ x : 0, y : 0});
+  const [endXY, setEndXY]                 = useState({ x : 0, y : 0});
+  const [isDrawing, setIsDrawing]         = useState(false);
+  const [figureList, setFigureList]       = useState<ReactElement[]>([]);
   const [movingFigure, setMovingFigure]   = useState<HTMLElement|null>();
+  const [editTarget, setEditTarget]       = useState<HTMLElement|null>();
+  const [popupOpen, setPopupOpen]         = useState(false);
+  const [selectedValue, setSelectedValue] = useState('');
+
   const allFigures = useSelector((state: RootState) => state.figure.figureList);
   const dispatch = useDispatch();
 
@@ -23,14 +27,19 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
   const movingRef        = useRef<{elem:HTMLElement|null, x:any,y:any, width:any}>({elem:null,x:0,y:0,width:0});
   const figureRef        = useRef<(SVGSVGElement | null)>(null);
   const figureListRef    = useRef<(HTMLDivElement | null)[]>([]);
-  const figureButtonRef  = useRef<(HTMLDivElement | null)[]>([]);
   
   const figureWith   = endXY.x - startXY.x;
   const figureHeight = endXY.y - startXY.y;
   
   const figureX = startXY.x - endXY.x < 0 ? startXY.x : endXY.x;
   const figureY = startXY.y - endXY.y < 0 ? startXY.y : endXY.y;
-  
+
+  const handlePopupClose = (value: string) => {
+    setPopupOpen(false);
+    setEditTarget(null);
+    setSelectedValue(value);
+  };
+
   
   const stringToHTML = (element : string) => {
     let result = <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(element)}} />;
@@ -68,8 +77,9 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
 
       case 'contextmenu' : 
       e.preventDefault();
-
-       return null;
+      if(editTarget){
+        setPopupOpen(true);
+      }
       break;
       case 'mousedown' :
 
@@ -78,6 +88,7 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
         setEndXY({x,y});
         if(targetElem.tagName === 'svg'){
           setMovingFigure(targetElem);
+          setEditTarget(targetElem);
           movingRef.current.elem = targetElem;
           movingRef.current.x = Number(window.getComputedStyle(targetElem).left.replace('px',''));
           movingRef.current.y = Number(window.getComputedStyle(targetElem).top.replace('px',''));
@@ -101,7 +112,7 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
         dispatch(editFigure(figure.outerHTML +"class:"+ figureClass));
         setMovingFigure(null);
       }
-
+      setEditTarget(null);
       break;
       case 'mousemove' : 
         if(isDrawing){
@@ -144,7 +155,7 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
           border='1px solid'
           sx={{
           cursor:'crosshair',
-          zIndex:'9999'
+          zIndex:'-9999 !important'
           }}
         >
         <>
@@ -168,7 +179,8 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
             top: figureY,
             left: figureX,
             display: isDrawing===true?  'block': 'none',
-            cursor:'move'
+            cursor:'move',
+            zIndex:'100',
           }}>
             {drawOption==='circle'&&(
               <ellipse 
@@ -187,11 +199,19 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
           
           </svg>
         </Box>
+
         <SideBar 
           figureList={figureList}
           figureListRef={figureListRef}
-          figureButtonRef={figureButtonRef}
         />
+        {popupOpen &&
+          <OptionPopup
+            selectedValue={selectedValue}
+            open={popupOpen}
+            onClose={handlePopupClose} 
+            figure={editTarget as HTMLElement}
+          ></OptionPopup>
+        }
       </Box>
     </>
   );
