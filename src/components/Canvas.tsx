@@ -4,7 +4,7 @@ import { DrawOption } from '../store/type';
 import {FIGURE_LINE_WIDTH, FIGURE_MINIMUM_SIZE} from '../store/CONST';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store';
-import { saveFigure, initFigure } from '../store/figureSlice';
+import { saveFigure, editFigure, initFigure } from '../store/figureSlice';
 import * as DOMPurify from 'dompurify';
 import SideBar from './SideBar';
 
@@ -20,7 +20,7 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
   const dispatch = useDispatch();
 
   const mouseRef         = useRef<HTMLDivElement>(null);
-  const movingRef        = useRef<{x:any,y:any, width:any}>({x:0,y:0,width:0});
+  const movingRef        = useRef<{elem:HTMLElement|null, x:any,y:any, width:any}>({elem:null,x:0,y:0,width:0});
   const figureRef        = useRef<(SVGSVGElement | null)>(null);
   const figureListRef    = useRef<(HTMLDivElement | null)[]>([]);
   const figureButtonRef  = useRef<(HTMLDivElement | null)[]>([]);
@@ -41,7 +41,6 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
   useEffect(()=> {
     setFigureList(allFigures.map((x)=> stringToHTML(x)
     ));
-  
     if(figureList.length<1){
       figureListRef.current = [];
     }
@@ -65,13 +64,11 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
     const x = e.pageX;
     const y = e.pageY;
     
-    console.log(e.type);
     switch(e.type){
 
       case 'contextmenu' : 
       e.preventDefault();
 
-       console.log('dd');
        return null;
       break;
       case 'mousedown' :
@@ -81,6 +78,7 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
         setEndXY({x,y});
         if(targetElem.tagName === 'svg'){
           setMovingFigure(targetElem);
+          movingRef.current.elem = targetElem;
           movingRef.current.x = Number(window.getComputedStyle(targetElem).left.replace('px',''));
           movingRef.current.y = Number(window.getComputedStyle(targetElem).top.replace('px',''));
         }else{
@@ -92,13 +90,15 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
       if(isDrawing){
         setIsDrawing(false);
         if(testIsFigure()){
-            let figure = figureRef.current as Element;
-            dispatch(saveFigure(figure.outerHTML));
+          let randomNumber = new Date().getTime();
+          let figure = figureRef.current as Element;
+          figure.setAttribute('class',randomNumber.toString());
+          dispatch(saveFigure(figure.outerHTML));
         }
       }else if(movingFigure){
         let figure = movingFigure as Element;
-        console.log(movingRef.current);
-        // dispatch(saveFigure(figure.outerHTML));
+        let figureClass= figure.classList[0];
+        dispatch(editFigure(figure.outerHTML +"class:"+ figureClass));
         setMovingFigure(null);
       }
 
@@ -123,11 +123,6 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
     }
   }
 
-  const mouseRightClickHandler: MouseEventHandler = (e) => {
-    e.preventDefault();
-    console.log("dd");
-    // alert('채팅방을 정말 삭제하시겠어요?')
-  }
   return (
     <>
       <Box
