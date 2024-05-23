@@ -27,6 +27,9 @@ const handleOptionClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) =
           key={index}
           onClick={handleOptionClick}
           data-option={option.value}
+          sx={{
+            fontWeight: option.value == drawOption ? 'bold':'normal'
+          }}
         > {option.name} </Button>
       ))}
       <Button onClick={handleClearBtn}>
