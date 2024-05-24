@@ -48,9 +48,9 @@ return (
             sx={{
             position:'absolute',
             top:'105px',
-            right:'25px',
-            height:'90%',
-            width:'120px',
+            right:'10%',
+            height:'50%',
+            width:'130px',
             overflow:'scroll',
             border:'1px solid black'
             }}      

@@ -137,8 +137,8 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
   return (
     <>
       <Box
-        width={'80%'} 
-        height={'90vh'}
+        width={'90%'} 
+        height={'80vh'}
         textAlign='center' 
         margin={'auto'}
       >
@@ -150,8 +150,8 @@ const Canvas: React.FC<DrawOption>= ({drawOption}) => {
           onContextMenu={mouseClickHandler}
           onMouseLeave={mouseClickHandler}
           onMouseUp={mouseClickHandler}
-          width={'80%'} 
-          height={800} 
+          width={'90%'} 
+          height={'95%'} 
           border='1px solid'
           sx={{
           cursor:'crosshair',
