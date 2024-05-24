@@ -1,46 +1,40 @@
-# Getting Started with Create React App
+# 웹 그림판
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 프로젝트 설명
+이 프로젝트는 웹 상에서 그림을 그릴 수 있는 웹 사이트입니다.
 
-## Available Scripts
+-  마우스를 드래그해서 사각형을 그릴 수 있습니다.
+-  마우스를 드래그해서 원을 그릴 수 있습니다.
+- 도형을 선택해서 삭제할 수 있습니다.
+-  모든 도형을 일괄 삭제할 수 있습니다.
+- 도형을 선택한 후 드래그로 위치를 바꿀 수 있습니다.
+- 도형을 선택해서 표시 순서를 바꿀 수 있습니다. (e.g. 맨 앞으로 가져오기, 앞으로 가져오기, 맨 뒤로 보내기, 뒤로 보내기)
+- 그려진 도형은 Client-side storage에 저장되어 페이지를 새로고침 해도 유지됩니다.
 
-In the project directory, you can run:
+## 목차
+- [설치](#설치)
+- [사용법](#사용법)
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## 설치
+1. 프로젝트 클론 or 다운로드 후 해당 폴더에서 인스톨
+- npm install
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+2. 설치 완료 후 실행
+- npm start
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 사용법
 
-### `npm run build`
+일반 그림판과 같이 마우스 왼쪽 클릭으로 도형의 시작점을 설정, 드래그로 그릴 수 있습니다.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+![설명이미지1](./img/draw1.gif)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+오른쪽의 선택박스를 통해 특정 도형을 선택 삭제 할 수 있습니다. 위의 메뉴바의 '지우기' 버튼 클릭 시 일괄 삭제가 가능합니다.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+![설명이미지2](./img/draw2.gif)
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+도형 드래그를 통해 위치를 변경할 수 있으며, 마우스 오른쪽 클릭으로 도형의 표시 순서를 변경이 가능합니다.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+![설명이미지3](./img/draw3.gif)
